@@ -1,0 +1,25 @@
+{
+    "name": "hoover.js",
+    "version": "0.0.1",
+    "description": "a neume.js Synth for Hoover sound",
+    "main": "index.js",
+    "scripts": {
+    },
+    "keywords": [
+        "music",
+        "synth",
+        "rave",
+        "90's"
+    ],
+    "author": "youpy",
+    "license": "MIT",
+    "dependencies": {
+    },
+    "devDependencies": {
+        "gulp": "^3.6.2",
+        "gulp-browserify": "^0.5.0",
+        "gulp-concat": "^2.2.0",
+        "gulp-connect": "^2.0.5",
+        "gulp-uglify": "^0.3.0"
+    }
+}
