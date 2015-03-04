@@ -2,7 +2,7 @@
 
 var neu = neume(new AudioContext());
 var _ = neume._;
-var mouse = { y: 290 };
+var mouse = { y: 293.7 };
 
 function setMouseY(y) {
   mouse.y = _.midicps(_.linlin(y, 0, 1, 72, 48) | 0);
