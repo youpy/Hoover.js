@@ -61,4 +61,4 @@ function Hoover($, obj, options) {
   ).mul(0.15);
 }
 
-module.exports = Hoover;
+export default Hoover;
