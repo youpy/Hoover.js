@@ -1,64 +1,156 @@
 'use strict';
 
-var neu = neume(new AudioContext());
+import WrappedAudioParam from './wrapped_audio_param';
 
-function Hoover($, obj, options) {
-  var detune = 4.87;
+const DETUNE = 4.87;
 
-  if (typeof options === 'undefined') {
-    obj = '@freq';
+class Node {
+  constructor(node, mul, add, amp) {
+    this.node = node;
+    this.mul = mul;
+    this.add = add;
+    this.amp = amp;
   }
 
-  if (typeof options === 'undefined') {
-    options = { value: 293.7 };
+  get param() {
+    return [this.node.frequency, this.mul, this.add];
   }
-
-  var freq = $(obj, options);
-
-  var bass = [
-    [0.25, 1.0],
-    [0.5, 0.3],
-    [0.75, 0.2]
-  ].map(function(x) {
-    return [freq.mul(x[0]), x[1] * 3.0];
-  });
-
-  var midfreqs = [
-    [1.0, 1.0],
-    [2.0, 0.4],
-    [3.0, 0.15],
-    [4.0, 0.10]
-  ].reduce(function(memo, x) {
-    return memo.concat([-1, 0, 1].map(function(xx) {
-      return [freq.mul(x[0]).add(detune * xx), x[1]];
-    }));
-  }, []);
-
-  return $(
-    bass.map(function(x) {
-      return $('tri', {
-        freq: $('adsr', {
-          curve: 'exp',
-          attackTime: 0.5,
-          decayTime: 0.7,
-          sustainLevel: 0.714,
-          mul: 1.0
-        }, x[0].mul(1.4)),
-        mul: x[1]
-      });
-    }).concat(midfreqs.map(function(x) {
-      return $('saw', {
-        freq: $('adsr', {
-          curve: 'exp',
-          attackTime: 0.5,
-          decayTime: 0.7,
-          sustainLevel: 0.714,
-          mul: 1.0
-        }, $('sin', { freq: 0.1 }).mul(2).add(x[0].mul(1.4))),
-        mul: x[1]
-      });
-    }))
-  ).mul(0.15);
 }
+
+export class Hoover {
+  constructor(context) {
+    this._context = context;
+    this.nodes = [];
+
+    let presets = [
+      [0.25, 0, 3.0],
+      [0.5, 0, 0.9],
+      [0.25, 0, 0.6],
+    ];
+
+    [
+      [1.0, 1.0],
+      [2.0, 0.4],
+      [3.0, 0.15],
+      [4.0, 0.10]
+    ].forEach((v) => {
+      [-1, 0, 1].forEach((vv) => {
+        presets.push([v[0], vv * DETUNE, v[1]]);
+      });
+    });
+
+    presets.forEach((preset, i) => {
+      let osc = context.createOscillator();
+
+      osc.type = i < 3 ? 'triangle' : 'sawtooth';
+      this.nodes.push(new Node(osc, preset[0], preset[1], preset[2]));
+    });
+
+    this._frequency = new WrappedAudioParam(
+      4,
+      this.nodes.map((node) => {
+        return node.param;
+      })
+    );
+  }
+
+  get context() {
+    return this._context;
+  }
+
+  get numberOfInputs() {
+    return 0;
+  }
+
+  get numberOfOutputs() {
+    return 1;
+  }
+
+  get channelCount() {
+    return this.nodes[0].node.channelCount;
+  }
+
+  set channelCount(value) {
+    this._eachNode((node) => {
+      node.channelCount = value;
+    });
+  }
+
+  get channelCountMode() {
+    return this.nodes[0].node.channelCountMode;
+  }
+
+  set channelCountMode(value) {
+    this._eachNode((node) => {
+      node.channelCountMode = value;
+    });
+  }
+
+  get channelInterpretation() {
+    return this.nodes[0].node.channelInterpretation;
+  }
+
+  set channelInterpretation(value) {
+    this._eachNode((node) => {
+      node.channelInterpretation = value;
+    });
+  }
+
+  connect(audioNode) {
+    this._eachNode((node, amp) => {
+      let gain = this.context.createGain();
+
+      gain.gain.value = amp * 0.15;
+      node.connect(gain);
+      gain.connect(audioNode);
+    });
+  }
+
+  disconnect() {
+    this._eachNode((node) => {
+      node.disconnect();
+    });
+  }
+
+  get type() {
+    return 'hoover';
+  }
+
+  set type(value) {
+    return;
+  }
+
+  get frequency() {
+    return this._frequency;
+  }
+
+  get detune() {
+    return this.nodes[0].node.detune;
+  }
+
+  start(when = 0) {
+    var freq = this.frequency.value;
+
+    this.frequency.value = 0.0;
+    this.frequency.setValueAtTime(0.0, when);
+    this.frequency.exponentialRampToValueAtTime(freq * 1.4, when + 0.5);
+    this.frequency.exponentialRampToValueAtTime(freq, when + 1.2);
+    this._eachNode((node) => {
+      node.start(when);
+    });
+  }
+
+  stop(when = 0) {
+    this._eachNode((node) => {
+      node.stop(when);
+    });
+  }
+
+  _eachNode(fn) {
+    this.nodes.forEach((node) => {
+      fn(node.node, node.amp);
+    });
+  }
+};
 
 export default Hoover;
