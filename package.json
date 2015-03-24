@@ -33,7 +33,7 @@
         "watch": "fswatch -E -e flymake.js -e '\\.(jade|scss)$' -i '\\.js$' -r ./src -r ./test | xargs -I{} -n 1 npm run build",
         "build": "npm run build-to5 && npm run build-browser && npm run build-minify && npm run test",
         "build-browser": "browserify ./index.js --standalone Hoover --outfile build/js/hoover.js",
-        "build-minify": "uglifyjs build/js/hoover.js -m -r self -o build/js/hoover.min.js",
+        "build-minify": "uglifyjs build/js/hoover.js -m -r self -o build/js/hoover.min.js --source-map build/js/hoover.min.js.map",
         "build-to5": "babel src --out-dir lib",
         "livereload": "live-reload --port 9091 build/ example/",
         "test": "mocha --require espower-babel/guess",
