@@ -50,6 +50,12 @@ export class WrappedAudioParam {
     });
   }
 
+  cancelScheduledValues(when) {
+    this._eachParam((param) => {
+      param.cancelScheduledValues(when);
+    });
+  }
+
   _eachParam(fn) {
     this.params.forEach((param) => {
       fn(param[0], param[1], param[2]);
