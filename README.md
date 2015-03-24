@@ -1,6 +1,7 @@
 # Hoover.js
 
-A [neume.js](https://github.com/mohayonao/neume.js) synth for Hoover sound
+A JavaScript library to play hoover sound on Web Audio API.
+It is (almost) compatible with OscillatorNode.
 
 ## See also
 
