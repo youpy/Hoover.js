@@ -15,7 +15,7 @@ class Node {
   get param() {
     return [this.node.frequency, this.mul, this.add];
   }
-}
+};
 
 export class Hoover {
   constructor(context) {
@@ -25,7 +25,7 @@ export class Hoover {
     let presets = [
       [0.25, 0, 3.0],
       [0.5, 0, 0.9],
-      [0.25, 0, 0.6],
+      [0.25, 0, 0.6]
     ];
 
     [
@@ -42,7 +42,18 @@ export class Hoover {
     presets.forEach((preset, i) => {
       let osc = context.createOscillator();
 
-      osc.type = i < 3 ? 'triangle' : 'sawtooth';
+      if(i >= 3) {
+        let lfo = this.context.createOscillator();
+
+        lfo.frequency.value = 0.2 + (preset[0] * 1.4);
+        lfo.connect(osc.frequency);
+        lfo.start();
+
+        osc.type = 'sawtooth';
+      } else {
+        osc.type = 'triangle';
+      }
+
       this.nodes.push(new Node(osc, preset[0], preset[1], preset[2]));
     });
 
@@ -129,10 +140,10 @@ export class Hoover {
   }
 
   start(when = 0) {
-    var freq = this.frequency.value;
+    let freq = this.frequency.value;
 
-    this.frequency.value = 0.0;
-    this.frequency.setValueAtTime(0.0, when);
+    this.frequency.value = 1e-6;
+    this.frequency.setValueAtTime(1e-6, when);
     this.frequency.exponentialRampToValueAtTime(freq * 1.4, when + 0.5);
     this.frequency.exponentialRampToValueAtTime(freq, when + 1.2);
     this._eachNode((node) => {
