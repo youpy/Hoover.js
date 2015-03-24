@@ -47,7 +47,7 @@ export class Hoover {
 
         lfo.frequency.value = 0.2 + (preset[0] * 1.4);
         lfo.connect(osc.frequency);
-        lfo.start();
+        lfo.start(0);
 
         osc.type = 'sawtooth';
       } else {
