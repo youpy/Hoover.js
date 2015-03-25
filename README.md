@@ -4,6 +4,32 @@ A JavaScript library to play hoover sound on Web Audio API.
 
 It is (almost) compatible with [OscillatorNode interface](http://webaudio.github.io/web-audio-api/#the-oscillatornode-interface).
 
+## Installation
+
+### Browser
+
+- https://raw.githubusercontent.com/youpy/Hoover.js/master/build/js/hoover.js
+- https://raw.githubusercontent.com/youpy/Hoover.js/master/build/js/hoover.min.js
+
+```html
+<script src="hoover.min.js"></script>
+<script>
+  var hoover = new Hoover(new AudioContext());
+</script>
+```
+
+### npm
+
+```
+npm install hoover.js
+```
+
+```javascript
+require('web-audio-test-api');
+var Hoover = require('hoover.js');
+var hoover = Hoover(new AudioContext());
+```
+
 ## See also
 
 - https://en.wikipedia.org/wiki/Hoover_sound
