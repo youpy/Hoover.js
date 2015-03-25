@@ -13,9 +13,6 @@ It is (almost) compatible with [OscillatorNode interface](http://webaudio.github
 
 ```html
 <script src="hoover.min.js"></script>
-<script>
-  var hoover = new Hoover(new AudioContext());
-</script>
 ```
 
 ### npm
@@ -27,7 +24,14 @@ npm install hoover.js
 ```javascript
 require('web-audio-test-api');
 var Hoover = require('hoover.js');
-var hoover = Hoover(new AudioContext());
+```
+
+## Usage
+
+```javascript
+var hoover = new Hoover(new AudioContext());
+hoover.connect(hoover.context.destination);
+hoover.start();
 ```
 
 ## See also
