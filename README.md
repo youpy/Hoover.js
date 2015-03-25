@@ -1,7 +1,8 @@
 # Hoover.js
 
 A JavaScript library to play hoover sound on Web Audio API.
-It is (almost) compatible with OscillatorNode API.
+
+It is (almost) compatible with [OscillatorNode interface](http://webaudio.github.io/web-audio-api/#the-oscillatornode-interface).
 
 ## See also
 
