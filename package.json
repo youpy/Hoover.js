@@ -1,6 +1,6 @@
 {
     "name": "hoover.js",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Hoover sound for Web Audio API",
     "main": "index.js",
     "author": "youpy <youpy@buycheapviagraonlinenow.com>",
@@ -26,7 +26,6 @@
         "package.json",
         "README.md",
         "index.js",
-        "browser.js",
         "lib"
     ],
     "scripts": {
