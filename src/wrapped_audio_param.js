@@ -39,13 +39,14 @@ export class WrappedAudioParam {
   }
 
   setTargetAtTime(target, startTime, timeConstant) {
-    this._eachParam((param) => {
-      param.setTargetAtTime(target, startTime, timeConstant);
+    this._eachParam((param, mul, add) => {
+      param.setTargetAtTime(target * mul + add, startTime, timeConstant);
     });
   }
 
   setValueCurveAtTime(values, startTime, duration) {
     this._eachParam((param) => {
+      // TODO: multiply and add values
       param.setValueCurveAtTime(values, startTime, duration);
     });
   }
