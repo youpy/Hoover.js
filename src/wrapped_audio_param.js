@@ -45,9 +45,14 @@ export class WrappedAudioParam {
   }
 
   setValueCurveAtTime(values, startTime, duration) {
-    this._eachParam((param) => {
-      // TODO: multiply and add values
-      param.setValueCurveAtTime(values, startTime, duration);
+    this._eachParam((param, mul, add) => {
+      let v = new Float32Array(values.length);
+
+      for (let i = 0; i < values.length; i ++) {
+        v[i] = values[i] * mul + add;
+      }
+
+      param.setValueCurveAtTime(v, startTime, duration);
     });
   }
 

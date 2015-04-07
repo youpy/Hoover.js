@@ -71,7 +71,7 @@ var Hoover = exports.Hoover = (function () {
 
         lfo.frequency.value = 0.2 + preset[0] * 1.4;
         lfo.connect(osc.frequency);
-        lfo.start();
+        lfo.start(0);
 
         osc.type = "sawtooth";
       } else {
@@ -268,15 +268,21 @@ var WrappedAudioParam = exports.WrappedAudioParam = (function () {
     },
     setTargetAtTime: {
       value: function setTargetAtTime(target, startTime, timeConstant) {
-        this._eachParam(function (param) {
-          param.setTargetAtTime(target, startTime, timeConstant);
+        this._eachParam(function (param, mul, add) {
+          param.setTargetAtTime(target * mul + add, startTime, timeConstant);
         });
       }
     },
     setValueCurveAtTime: {
       value: function setValueCurveAtTime(values, startTime, duration) {
-        this._eachParam(function (param) {
-          param.setValueCurveAtTime(values, startTime, duration);
+        this._eachParam(function (param, mul, add) {
+          var v = new Float32Array(values.length);
+
+          for (var i = 0; i < values.length; i++) {
+            v[i] = values[i] * mul + add;
+          }
+
+          param.setValueCurveAtTime(v, startTime, duration);
         });
       }
     },
