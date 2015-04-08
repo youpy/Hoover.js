@@ -170,6 +170,14 @@ var Hoover = exports.Hoover = (function () {
         return this.nodes[0].node.detune;
       }
     },
+    onended: {
+      get: function () {
+        return this.nodes[0].node.onended;
+      },
+      set: function (fn) {
+        this.nodes[0].node.onended = fn;
+      }
+    },
     start: {
       value: function start() {
         var when = arguments[0] === undefined ? 0 : arguments[0];
