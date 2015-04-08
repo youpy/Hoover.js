@@ -139,6 +139,14 @@ export class Hoover {
     return this.nodes[0].node.detune;
   }
 
+  get onended() {
+    return this.nodes[0].node.onended;
+  }
+
+  set onended(fn) {
+    this.nodes[0].node.onended = fn;
+  }
+
   start(when = 0) {
     let freq = this.frequency.value;
 

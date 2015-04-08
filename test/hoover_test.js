@@ -119,4 +119,32 @@ describe('Hoover', () => {
       hoover.stop(123);
     });
   });
+
+  describe('OscillatorNode events', () => {
+    it('onended', () => {
+      let value = false;
+      let fn = () => {
+        value = true;
+      };
+
+      hoover.onended = fn;
+
+      assert(hoover.onended == fn);
+
+      hoover.connect(hoover.context.destination);
+
+      hoover.start();
+      hoover.stop(0.1);
+
+      assert(value == false);
+
+      hoover.context.$processTo("00:00.50");
+
+      assert(value == false);
+
+      hoover.context.$processTo("00:00.100");
+
+      assert(value == true);
+    });
+  });
 });
