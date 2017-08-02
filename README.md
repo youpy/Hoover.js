@@ -1,4 +1,4 @@
-# Hoover.js
+# Hoover.js [![Build Status](https://travis-ci.org/youpy/Hoover.js.svg?branch=master)](https://travis-ci.org/youpy/Hoover.js)
 
 A JavaScript library to play hoover sound on Web Audio API.
 
