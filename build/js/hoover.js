@@ -6,35 +6,41 @@ var Hoover = require('./lib/hoover.js');
 module.exports = Hoover;
 
 },{"./lib/hoover.js":2}],2:[function(require,module,exports){
-"use strict";
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(object, property, receiver) { var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc && desc.writable) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-"use strict";
+exports.Hoover = undefined;
 
-var BundledOscillator = _interopRequire(require("@youpy/bundled-oscillator"));
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _bundledOscillator = require('@youpy/bundled-oscillator');
+
+var _bundledOscillator2 = _interopRequireDefault(_bundledOscillator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var DETUNE = 4.87;
 
-var Hoover = exports.Hoover = (function (_BundledOscillator) {
+var Hoover = exports.Hoover = function (_BundledOscillator) {
+  _inherits(Hoover, _BundledOscillator);
+
   function Hoover(context) {
     _classCallCheck(this, Hoover);
 
     var config = [];
-    var presets = [[0.25, 0, 3], [0.5, 0, 0.9], [0.25, 0, 0.6]];
+    var presets = [[0.25, 0, 3.0], [0.5, 0, 0.9], [0.25, 0, 0.6]];
 
-    [[1, 1], [2, 0.4], [3, 0.15], [4, 0.1]].forEach(function (v) {
+    [[1.0, 1.0], [2.0, 0.4], [3.0, 0.15], [4.0, 0.10]].forEach(function (v) {
       [-1, 0, 1].forEach(function (vv) {
         presets.push([v[0], vv * DETUNE, v[1]]);
       });
@@ -50,47 +56,44 @@ var Hoover = exports.Hoover = (function (_BundledOscillator) {
         lfo.connect(osc.frequency);
         lfo.start(0);
 
-        osc.type = "sawtooth";
+        osc.type = 'sawtooth';
       } else {
-        osc.type = "triangle";
+        osc.type = 'triangle';
       }
 
       config.push([osc, preset[0], preset[1], preset[2] * 0.15]);
     });
 
-    _get(Object.getPrototypeOf(Hoover.prototype), "constructor", this).call(this, context, config, 4);
+    return _possibleConstructorReturn(this, (Hoover.__proto__ || Object.getPrototypeOf(Hoover)).call(this, context, config, 4));
   }
 
-  _inherits(Hoover, _BundledOscillator);
+  _createClass(Hoover, [{
+    key: 'start',
+    value: function start() {
+      var when = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
-  _createClass(Hoover, {
-    type: {
-      get: function () {
-        return "hoover";
-      }
-    },
-    start: {
-      value: function start() {
-        var when = arguments[0] === undefined ? 0 : arguments[0];
+      var freq = this.frequency.value;
 
-        var freq = this.frequency.value;
+      this.frequency.value = 1e-6;
+      this.frequency.setValueAtTime(1e-6, when);
+      this.frequency.exponentialRampToValueAtTime(freq * 1.4, when + 0.5);
+      this.frequency.exponentialRampToValueAtTime(freq, when + 1.2);
 
-        this.frequency.value = 0.000001;
-        this.frequency.setValueAtTime(0.000001, when);
-        this.frequency.exponentialRampToValueAtTime(freq * 1.4, when + 0.5);
-        this.frequency.exponentialRampToValueAtTime(freq, when + 1.2);
-
-        _get(Object.getPrototypeOf(Hoover.prototype), "start", this).call(this, when);
-      }
+      _get(Hoover.prototype.__proto__ || Object.getPrototypeOf(Hoover.prototype), 'start', this).call(this, when);
     }
-  });
+  }, {
+    key: 'type',
+    get: function get() {
+      return 'hoover';
+    }
+  }]);
 
   return Hoover;
-})(BundledOscillator);
+}(_bundledOscillator2.default);
 
 ;
 
-exports["default"] = Hoover;
+exports.default = Hoover;
 },{"@youpy/bundled-oscillator":3}],3:[function(require,module,exports){
 'use strict';
 
