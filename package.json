@@ -37,7 +37,7 @@
     "build-minify": "uglifyjs build/js/hoover.js -m -r self -o build/js/hoover.min.js --source-map build/js/hoover.min.js.map",
     "build-to5": "babel src --out-dir lib",
     "livereload": "live-reload --port 9091 build/ example/",
-    "test": "mocha --require espower-babel/guess",
+    "test": "npm run build-to5 && NODE_ENV=test mocha --require espower-babel/guess",
     "start": "npm run watch & npm run livereload & gulp connect"
   }
 }
