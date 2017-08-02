@@ -20,7 +20,7 @@
         "mocha": "^2.2.1",
         "power-assert": "^0.10.2",
         "uglify-js": "^2.4.16",
-        "web-audio-test-api": "^0.2.1"
+        "web-audio-test-api": "^0.5.2"
     },
     "files": [
         "package.json",
