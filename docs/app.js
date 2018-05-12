@@ -6,7 +6,11 @@ var hoover = new Hoover.Hoover(new AudioContext());
 
 hoover.frequency.value = 293.6647679174076;
 hoover.connect(hoover.context.destination);
-hoover.start();
+
+var button = document.querySelector('button');
+button.addEventListener('click', function() {
+  hoover.start();
+})
 
 function bend(y) {
   hoover.frequency.exponentialRampToValueAtTime(
